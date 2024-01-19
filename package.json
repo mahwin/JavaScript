@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start": "tsc-watch --onSuccess \"node dist/map.js\" "
+    "start": "tsc-watch --onSuccess \"node dist/map/map.js\" "
   },
   "author": "",
   "license": "ISC",
