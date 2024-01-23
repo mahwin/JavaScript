@@ -23,18 +23,12 @@ function intToString(number) {
   return result.join("");
 }
 
-// 특정 함수의 메모리 사용량을 확인하는 함수
-function measurePerformanceAndMemory({
-  fn,
-  properties,
-  업데이트_또는_삭제_확률,
-  프로퍼티_접근_확률,
-}) {
-  global.gc();
+// 인수로 받은 함수를 실행하고 메모리 사용량과 걸린 시간을 측정하는 함수
+function measurePerformanceAndMemory({ fn, parameters }) {
   const initialMemory = process.memoryUsage().heapUsed;
   const startTime = process.hrtime();
 
-  fn({ properties, 업데이트_또는_삭제_확률, 프로퍼티_접근_확률 });
+  fn(parameters);
 
   const finalMemory = process.memoryUsage().heapUsed;
   const endTime = process.hrtime();
@@ -45,14 +39,13 @@ function measurePerformanceAndMemory({
   return { usedTime, usedMemory };
 }
 
-function saveInfo(...arr) {
-  const filePath = "./src/MapVsObject/result2.txt";
+function saveInfo(saveInfo) {
+  const filePath = "./src/MapVsObject/result4.txt";
   try {
-    // 파일이 존재할 때만 읽어오기
     if (fs.existsSync(filePath)) {
-      fs.appendFileSync(filePath, `\n${arr.join(",")}`, "utf-8");
+      fs.appendFileSync(filePath, saveInfo, "utf-8");
     } else {
-      fs.writeFileSync(filePath, arr.join(","), "utf-8");
+      fs.writeFileSync(filePath, saveInfo, "utf-8");
     }
   } catch (error) {
     console.error("파일 읽기 오류:", error);
@@ -72,84 +65,75 @@ function createProperties(프로퍼티_수) {
   return [...keys];
 }
 
-function testMap({ properties, 업데이트_또는_삭제_확률, 프로퍼티_접근_비율 }) {
-  const map = new Map();
-  for (let i = 0; i < properties.length; i++) {
-    const key = properties[i];
-    map.set(key, properties[i]);
-    if (random(프로퍼티_접근_비율)) {
-      const randomKey = properties[Math.floor(Math.random() * i)];
-      map.get(randomKey);
-    }
-    if (random(업데이트_또는_삭제_확률)) {
-      const randomKey = properties[Math.floor(Math.random() * i)];
-      if (random(0.5)) {
-        // 업데이트나 삭제를 무작위로 선택하기 위해 추가
-        map.delete(randomKey);
-      } else {
-        map.set(randomKey, values[i]);
-      }
-    }
-  }
-}
-
-function testObj({ properties, 업데이트_또는_삭제_확률, 프로퍼티_접근_비율 }) {
-  const obj = {};
-  for (let i = 0; i < properties.length; i++) {
-    const key = properties[i];
-    obj[key] = properties[i];
-
-    if (random(프로퍼티_접근_비율)) {
-      const randomKey = properties[Math.floor(Math.random() * i)];
-      obj[randomKey];
-    }
-    if (random(업데이트_또는_삭제_확률)) {
-      const randomKey = properties[Math.floor(Math.random() * i)];
-      if (random(0.5)) {
-        // 업데이트나 삭제를 무작위로 선택하기 위해 추가
-        delete obj[randomKey];
-      } else {
-        obj[randomKey] = values[i];
-      }
-    }
-  }
-}
-
-function test({
-  프로퍼티_수,
-  업데이트_또는_삭제_확률,
-  프로퍼티_접근_확률,
-  properties,
-}) {
-  shuffle(properties);
-
-  const objResult = measurePerformanceAndMemory({
-    fn: testMap,
+const testFunctionObj = {
+  map: function ({
     properties,
     업데이트_또는_삭제_확률,
-    프로퍼티_접근_확률,
+    프로퍼티_접근_비율,
     프로퍼티_수,
-  });
-  const mapResult = measurePerformanceAndMemory({
-    fn: testObj,
+  }) {
+    const map = new Map();
+    for (let i = 0; i < 프로퍼티_수; i++) {
+      const key = properties[i];
+      map.set(key, properties[i]);
+      if (random(프로퍼티_접근_비율)) {
+        const randomKey = properties[Math.floor(Math.random() * i)];
+        map.get(randomKey);
+      }
+      if (random(업데이트_또는_삭제_확률)) {
+        const randomKey = properties[Math.floor(Math.random() * i)];
+        if (random(0.5)) {
+          map.delete(randomKey);
+        } else {
+          map.set(randomKey, properties[i]);
+        }
+      }
+    }
+  },
+  object: function ({
     properties,
     업데이트_또는_삭제_확률,
-    프로퍼티_접근_확률,
+    프로퍼티_접근_비율,
     프로퍼티_수,
+  }) {
+    const obj = {};
+    for (let i = 0; i < 프로퍼티_수; i++) {
+      const key = properties[i];
+      obj[key] = properties[i];
+
+      if (random(프로퍼티_접근_비율)) {
+        const randomKey = properties[Math.floor(Math.random() * i)];
+        obj[randomKey];
+      }
+      if (random(업데이트_또는_삭제_확률)) {
+        const randomKey = properties[Math.floor(Math.random() * i)];
+        if (random(0.5)) {
+          delete obj[randomKey];
+        } else {
+          obj[randomKey] = properties[i];
+        }
+      }
+    }
+  },
+};
+
+function runTest(parameters) {
+  return ["map", "object"].map((functionName) => {
+    global.gc();
+    return measurePerformanceAndMemory({
+      fn: testFunctionObj[functionName],
+      parameters,
+    });
   });
-  saveInfo(
-    `Map,${프로퍼티_수},${업데이트_또는_삭제_확률},${업데이트_또는_삭제_확률},${mapResult.usedTime},${mapResult.usedMemory}\nObject,${프로퍼티_수},${업데이트_또는_삭제_확률},${업데이트_또는_삭제_확률},${objResult.usedTime},${objResult.usedMemory}`
-  );
 }
 
-// let 6500000
 function main() {
   const 십만 = 100_000;
   const 백만 = 1_000_000;
   const 천만 = 10_000_000;
   let properties = createProperties(백만);
   for (let 프로퍼티_수 = 십만; 프로퍼티_수 <= 천만; 프로퍼티_수 += 십만) {
-    if (프로퍼티_수 !== 백만 && 프로퍼티_수 % 백만 === 0) {
+    if (프로퍼티_수 % 백만 === 0) {
       properties = properties.concat(createProperties(백만));
     }
     for (
@@ -162,15 +146,20 @@ function main() {
         프로퍼티_접근_확률 <= 1;
         프로퍼티_접근_확률 += 0.1
       ) {
-        test({
+        shuffle(properties);
+
+        const testResult = runTest({
           프로퍼티_수,
           업데이트_또는_삭제_확률,
           프로퍼티_접근_확률,
           properties,
         });
+        const [mapResult, objResult] = testResult;
+        saveInfo(
+          `Map,${프로퍼티_수},${업데이트_또는_삭제_확률},${프로퍼티_접근_확률},${mapResult.usedTime},${mapResult.usedMemory}\nObject,${프로퍼티_수},${업데이트_또는_삭제_확률},${프로퍼티_접근_확률},${objResult.usedTime},${objResult.usedMemory}\n`
+        );
       }
     }
   }
 }
 main();
-// test(1000000, 0.5, 0.5);
