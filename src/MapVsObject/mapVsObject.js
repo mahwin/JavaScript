@@ -5,6 +5,11 @@ function random(threshold) {
   return Math.random() < threshold;
 }
 
+// 무작위로 배열을 섞어주는 함수
+function shuffle(arr) {
+  arr.sort(() => Math.random() - 0.5);
+}
+
 // 정수를 알파벳으로 바꿔주는 함수
 function intToString(number) {
   let result = [];
@@ -108,10 +113,6 @@ function testObj({ properties, 업데이트_또는_삭제_확률, 프로퍼티_�
       }
     }
   }
-}
-
-function shuffle(arr) {
-  arr.sort(() => Math.random() - 0.5);
 }
 
 function test({
