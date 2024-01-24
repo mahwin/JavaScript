@@ -10,9 +10,9 @@
     "noFallthroughCasesInSwitch": true,
     "module": "ES2022",
     "outDir": "dist",
-    "rootDir": "./",
+    "rootDir": "./보물창고",
     "moduleResolution": "node"
   },
-  "include": ["보물창고/**/*", "src/**/*"],
+  "include": ["보물창고/**/*.ts"],
   "exclude": ["node_modules"]
 }
