@@ -1,3 +1,4 @@
+name,propertyNum,updateOrDeleteRatial,accessRatial,time,memory
 Object,100000,0,0,48.61,17.78
 Object,100000,0,0.1,58.57,17.64
 Object,100000,0,0.2,68.70,17.83
