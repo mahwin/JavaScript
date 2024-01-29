@@ -1,36 +1,49 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 import styled from "styled-components";
-import { intFormatter } from "../../utils";
-import { type PropertiesNum } from "@/pages/MainChart";
 
-const 십만 = 100_000;
-const maxRange = 69 * 십만;
-const minRange = 1 * 십만;
+type SliderProps = {
+  value: number;
+  setValue: React.Dispatch<React.SetStateAction<number>>;
+  minRange: number;
+  maxRange: number;
+  step: number;
+  formatter: (value: number) => string;
+};
 
 export function Slider({
-  propertiesNum,
-  setPropertiesNum,
-}: {
-  propertiesNum: PropertiesNum;
-  setPropertiesNum: React.Dispatch<React.SetStateAction<PropertiesNum>>;
-}) {
+  minRange,
+  maxRange,
+  value,
+  setValue,
+  step,
+  formatter,
+}: SliderProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPropertiesNum(e.target.value as PropertiesNum);
+    setValue(+e.target.value as number);
   };
+
+  useEffect(() => {
+    if (!inputRef.current) return;
+
+    const percent = Math.floor((Number(value) / maxRange) * 100) - 0.2;
+    inputRef.current.style.background = `linear-gradient(to right, #FFE283 0%, #FFE283 ${percent}%, rgb(236, 236, 236) ${percent}%, rgb(236, 236, 236) 100%)`;
+  }, [value]);
 
   return (
     <SliderContainer>
       <SliderInput
+        ref={inputRef}
         type="range"
-        value={propertiesNum}
+        value={value}
         min={minRange}
         max={maxRange}
-        step={십만}
+        step={step}
         onChange={handleChange}
       />
       <SlideNumDisplay>
-        <span>{intFormatter(+propertiesNum, ",")}</span>
+        <span>{formatter(value)}</span>
       </SlideNumDisplay>
     </SliderContainer>
   );
@@ -62,13 +75,8 @@ const SlideNumDisplay = styled.div`
     color: whitesmoke;
   }
 `;
-const calculateBackground = (slideNum: string) => {
-  const percent = (Number(slideNum) / maxRange) * 100 - 0.5;
 
-  return `linear-gradient(to right, #FFE283 0%, #FFE283 ${percent}%, rgb(236, 236, 236) ${percent}%, rgb(236, 236, 236) 100%)`;
-};
-const SliderInput = styled.input<{ value?: string }>`
-  background: ${(props) => props.value && calculateBackground(props.value)};
+const SliderInput = styled.input`
   width: 100%;
   border-radius: 8px;
   outline: none;
