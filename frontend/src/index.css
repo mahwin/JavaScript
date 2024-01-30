@@ -132,3 +132,7 @@ input {
   -moz-appearance: none;
   appearance: none;
 }
+
+input[type="radio"] {
+  display: none;
+}

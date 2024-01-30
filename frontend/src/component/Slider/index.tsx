@@ -27,7 +27,8 @@ export function Slider({
   useEffect(() => {
     if (!inputRef.current) return;
 
-    const percent = Math.floor((Number(value) / maxRange) * 100) - 0.2;
+    const percent = Math.floor((Number(value) / maxRange) * 100);
+
     inputRef.current.style.background = `linear-gradient(to right, #FFE283 0%, #FFE283 ${percent}%, rgb(236, 236, 236) ${percent}%, rgb(236, 236, 236) 100%)`;
   }, [value]);
 

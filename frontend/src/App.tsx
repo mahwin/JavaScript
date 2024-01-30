@@ -1,8 +1,11 @@
+import { TwoDChartPage } from "./pages/TwoDChartPage";
+import { PageLayout } from "./component/common/PageLayout";
+
 function App() {
   return (
-    <>
-      <h1>Hi ~!</h1>
-    </>
+    <PageLayout>
+      <TwoDChartPage />
+    </PageLayout>
   );
 }
 
