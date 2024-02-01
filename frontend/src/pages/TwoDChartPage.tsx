@@ -13,8 +13,6 @@ export type ChartData = Record<
   Record<"labels" | "data", number[]>
 >;
 
-type TmpChartData = Record<MapOrObject, Record<number | string, number[]>>;
-
 type PropertiesNum = keyof typeof resultJSON;
 type MapOrObject = keyof (typeof resultJSON)[PropertiesNum];
 
@@ -25,7 +23,7 @@ const 십만 = 100_000;
 const maxRange = 69 * 십만;
 const minRange = 1 * 십만;
 
-const RATAIL_ARRAY = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
+const RATAIL_ARRAY = Array.from({ length: 11 }, (_, i) => i * 10);
 
 export function TwoDChartPage() {
   const [propertiesNum, setPropertiesNum] = useState<number>(100000);
@@ -42,20 +40,10 @@ export function TwoDChartPage() {
   useEffect(() => {
     if (!resultJSON) return;
 
-    const tmpChartData: TmpChartData = {
-      Map: {},
-      Object: {},
-    };
-
     const newChartData: ChartData = {
       Map: { labels: RATAIL_ARRAY, data: [] },
       Object: { labels: RATAIL_ARRAY, data: [] },
     };
-
-    RATAIL_ARRAY.forEach((el) => {
-      tmpChartData["Map"][el] = [];
-      tmpChartData["Object"][el] = [];
-    });
 
     for (const key of ["Map", "Object"]) {
       const targetData =
@@ -64,30 +52,12 @@ export function TwoDChartPage() {
         ];
 
       targetData.forEach((line) => {
-        (
-          tmpChartData[key as MapOrObject][
-            line[ratialType as RatialType]
-          ] as number[]
-        ).push(parseFloat(line[performanceType as PerformanceType]));
+        if (line[ratialType as RatialType] == ratial.toString()) {
+          newChartData[key as "Map" | "Object"].data.push(
+            parseFloat(line[performanceType as PerformanceType])
+          );
+        }
       });
-    }
-
-    for (const key of ["Map", "Object"]) {
-      for (const ratial of RATAIL_ARRAY) {
-        const performanceArr = tmpChartData[key as MapOrObject][ratial];
-        const filterPerformanceArr = performanceArr.slice(
-          2,
-          performanceArr.length - 2
-        );
-
-        const performanceAvg = parseInt(
-          (
-            filterPerformanceArr.reduce((acc, cur) => acc + cur, 0) /
-            filterPerformanceArr.length
-          ).toFixed(2)
-        );
-        newChartData[key as MapOrObject]["data"].push(performanceAvg);
-      }
     }
 
     setChartData({ ...newChartData });
@@ -115,7 +85,7 @@ export function TwoDChartPage() {
               name: "ratial",
               tapNum: 2,
               ids: ["updateOrDeleteRatial", "accessRatial"],
-              labels: ["수정/삭제 확률", "접근 확률"],
+              labels: ["수정/삭제 고정", "접근 고정"],
             }}
           />
         </Row>

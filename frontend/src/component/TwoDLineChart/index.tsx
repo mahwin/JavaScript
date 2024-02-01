@@ -53,7 +53,9 @@ export function TwoDLineChart({
             title: {
               display: true,
               text:
-                ratialType === "accessRatial" ? "접근 비율" : "수정/삭제 비율",
+                ratialType === "accessRatial"
+                  ? "수정/삭제 확률 (%)"
+                  : "접근 확률 (%)",
               font: {
                 size: 15,
               },
