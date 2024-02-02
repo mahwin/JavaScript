@@ -13,7 +13,7 @@ const 십만 = 100_000;
 const maxRange = 69 * 십만;
 const minRange = 1 * 십만;
 
-export function MainChart() {
+export function ThreeDChartPage() {
   const [propertiesNum, setPropertiesNum] = useState<number>(100000);
   const [graphData, setGraphData] = useState<GraphData>();
 

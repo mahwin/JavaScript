@@ -72,8 +72,8 @@ export const ThreeDLineChart = ({ type, graphData }: Props) => {
         height: 600,
         title: `${type} Chart`,
         scene: {
-          xaxis: { title: "업데이트/삭제 비율(%)" },
-          yaxis: { title: "접근 비율(%)" },
+          xaxis: { title: "업데이트/삭제 확률(%)" },
+          yaxis: { title: "접근 확률(%)" },
           zaxis: {
             title: `${type === "Time" ? "걸린 시간(ms)" : "사용 메모리(MB)"}`,
           },
