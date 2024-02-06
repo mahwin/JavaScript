@@ -29,9 +29,7 @@ class MyMap<T> {
 
   find(key: T): INode<T> | undefined {
     const hash = MyMap.hashFn(key);
-    if (!this.hashTable.includes(hash)) {
-      return undefined;
-    }
+    if (!this.hashTable[hash]) return undefined;
 
     let current = this.dataTable[hash];
     while (current !== undefined) {
@@ -50,17 +48,16 @@ class MyMap<T> {
   set(key: T, value: unknown) {
     const hash = MyMap.hashFn(key);
 
-    if (!this.hashTable.includes(hash)) {
-      this.hashTable.push(hash);
-    }
-
-    let current = this.dataTable[hash];
-    if (current === undefined) {
-      this.dataTable[hash] = new MyNode<T>(key, value);
+    if (!this.hashTable[hash]) {
+      this.hashTable[hash] = this.nextSlot;
+      this.dataTable[this.nextSlot] = new MyNode<T>(key, value);
       this.nextSlot++;
       this.length++;
       return;
     }
+
+    let current = this.dataTable[this.hashTable[hash]];
+
     while (current !== undefined) {
       if (current.key === key) {
         current.value = value;
@@ -76,6 +73,7 @@ class MyMap<T> {
     this.dataTable[this.nextSlot] = new MyNode<T>(key, value);
     this.nextSlot++;
     this.length++;
+    return;
   }
 
   get(key: T): unknown {
@@ -92,13 +90,37 @@ class MyMap<T> {
     current.key = undefined;
     this.length--;
   }
-
+  [Symbol.iterator]() {
+    let index = 0;
+    return {
+      next: () => {
+        if (index < this.dataTable.length) {
+          return {
+            value: [
+              this.dataTable[index + 1].key,
+              this.dataTable[index + 1].value,
+            ],
+            done: false,
+          };
+        } else {
+          return {
+            done: true,
+          };
+        }
+      },
+    };
+  }
   get size() {
     return this.length;
   }
 
   static hashFn(key: any): number {
-    return Number(key) % 2;
+    key = key.toString();
+    let hash = 0;
+    for (let i = 0; i < key.length; i++) {
+      hash += key.charCodeAt(i);
+    }
+    return hash;
   }
 }
 
@@ -107,5 +129,9 @@ myMap.set(0, 2);
 myMap.set(2, 2);
 myMap.set(1, 2);
 myMap.set(2, 4);
-console.log(myMap);
+
+for (const node of myMap) {
+  console.log(node, "?");
+}
+
 export { MyMap };
