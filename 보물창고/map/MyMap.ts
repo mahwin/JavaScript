@@ -1,3 +1,15 @@
+// 이터러블 객체를 만들기 위해 타입 변형
+interface IteratorYieldResult<TYield> {
+  done: false;
+  value: TYield;
+}
+
+interface IteratorReturnResult {
+  done: true;
+}
+
+type IteratorResult<T> = IteratorYieldResult<T> | IteratorReturnResult;
+
 interface INode<T> {
   key: T | undefined;
   value: unknown;
@@ -29,9 +41,10 @@ class MyMap<T> {
 
   find(key: T): INode<T> | undefined {
     const hash = MyMap.hashFn(key);
-    if (!this.hashTable[hash]) return undefined;
+    if (this.hashTable[hash] === undefined) return undefined;
 
-    let current = this.dataTable[hash];
+    let current = this.dataTable[this.hashTable[hash]];
+
     while (current !== undefined) {
       if (current.key === key) {
         return current;
@@ -48,7 +61,7 @@ class MyMap<T> {
   set(key: T, value: unknown) {
     const hash = MyMap.hashFn(key);
 
-    if (!this.hashTable[hash]) {
+    if (this.hashTable[hash] === undefined) {
       this.hashTable[hash] = this.nextSlot;
       this.dataTable[this.nextSlot] = new MyNode<T>(key, value);
       this.nextSlot++;
@@ -57,7 +70,6 @@ class MyMap<T> {
     }
 
     let current = this.dataTable[this.hashTable[hash]];
-
     while (current !== undefined) {
       if (current.key === key) {
         current.value = value;
@@ -73,6 +85,7 @@ class MyMap<T> {
     this.dataTable[this.nextSlot] = new MyNode<T>(key, value);
     this.nextSlot++;
     this.length++;
+
     return;
   }
 
@@ -92,14 +105,18 @@ class MyMap<T> {
   }
   [Symbol.iterator]() {
     let index = 0;
+    let node = this.dataTable[index];
     return {
-      next: () => {
-        if (index < this.dataTable.length) {
+      next: (): IteratorResult<[T | undefined, unknown]> => {
+        while (index < this.size - 1 && node.key === undefined) {
+          node = this.dataTable[index];
+          console.log(node);
+          index++;
+        }
+
+        if (index < this.size) {
           return {
-            value: [
-              this.dataTable[index + 1].key,
-              this.dataTable[index + 1].value,
-            ],
+            value: [node.key, node.value],
             done: false,
           };
         } else {
@@ -122,16 +139,6 @@ class MyMap<T> {
     }
     return hash;
   }
-}
-
-const myMap = new MyMap();
-myMap.set(0, 2);
-myMap.set(2, 2);
-myMap.set(1, 2);
-myMap.set(2, 4);
-
-for (const node of myMap) {
-  console.log(node, "?");
 }
 
 export { MyMap };
