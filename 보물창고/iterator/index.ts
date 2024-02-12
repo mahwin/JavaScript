@@ -1,19 +1,26 @@
+type Keys = keyof any;
+
+const indexSymbol = Symbol("index");
+
 class MyObj {
+  keys: Keys[];
+  [indexSymbol]: number;
+  [key: Keys]: unknown;
+
   constructor() {
     this.keys = [];
-    this.indexSymbol = Symbol("index");
-    this[this.indexSymbol] = 0;
+    this[indexSymbol] = 0;
   }
   [Symbol.iterator]() {
-    this[this.indexSymbol] = 0;
+    this[indexSymbol] = 0;
     return this;
   }
 
   next() {
-    const index = this[this.indexSymbol];
+    const index = this[indexSymbol];
     if (this.keys.length > index) {
       const key = this.keys[index];
-      this[this.indexSymbol] = index + 1;
+      this[indexSymbol] = index + 1;
 
       return { value: [key, this[key]], done: false };
     }
@@ -27,7 +34,7 @@ const customObj = new Proxy(new MyObj(), {
   },
 
   set: (target, key, value) => {
-    if (target.indexSymbol === key) {
+    if (indexSymbol === key) {
       target[key] = value;
       return true;
     }
@@ -39,8 +46,13 @@ const customObj = new Proxy(new MyObj(), {
 
   deleteProperty: (target, key) => {
     const keyIdx = target.keys.indexOf(key);
-    if (keyIdx === -1) return;
+    if (keyIdx === -1) {
+      return false;
+    }
 
     target.keys.splice(keyIdx, 1);
+    return true;
   },
 });
+
+export { customObj };
