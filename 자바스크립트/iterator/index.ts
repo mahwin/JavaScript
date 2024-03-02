@@ -47,9 +47,9 @@ const customObj = new Proxy(new MyObj(), {
   deleteProperty: (target, key) => {
     const keyIdx = target.keys.indexOf(key);
     if (keyIdx === -1) {
-      return false;
+      return true;
     }
-
+    delete target[key];
     target.keys.splice(keyIdx, 1);
     return true;
   },

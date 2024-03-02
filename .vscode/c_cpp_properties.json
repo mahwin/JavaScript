@@ -1,19 +1,18 @@
 {
-    "configurations": [
-        {
-            "includePath": [
-                "${workspaceFolder}/**",
-                "/Users/jeong-youseock/Desktop/emsdk/upstream/emscripten/**"
-            ],
-            "macFrameworkPath": [
-                "/System/Library/Frameworks",
-                "/Library/Frameworks"
-            ],
-            "intelliSenseMode": "macos-clang-x64",
-            "compilerPath": "/usr/bin/clang",
-            "cStandard": "c17",
-            "cppStandard": "c++17"
-        }
-    ],
-    "version": 4
+  "configurations": [
+    {
+      "name": "Win32",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "/Users/jeong-youseock/Desktop/emsdk/upstream/emscripten/**"
+      ],
+      "defines": ["_DEBUG", "UNICODE", "_UNICODE"],
+      "windowsSdkVersion": "10.0.17763.0",
+      "compilerPath": "/usr/bin/g++",
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "gcc-x64"
+    }
+  ],
+  "version": 4
 }

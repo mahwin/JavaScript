@@ -1,7 +1,6 @@
 import { customObj } from "../index";
 
-import { createRandomArr } from "../../utils";
-import { random } from "../../utils";
+import { createRandomArr, random } from "../../utils";
 
 import { expect } from "@jest/globals";
 

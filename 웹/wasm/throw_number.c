@@ -5,6 +5,8 @@ int main() {
   return 3;
 }
 
-EMSCRIPTEN_KEEPALIVE int throw_number(){
-  return 777;
+EMSCRIPTEN_KEEPALIVE int throw_number(int a){
+  return a+3;
+
 }
+

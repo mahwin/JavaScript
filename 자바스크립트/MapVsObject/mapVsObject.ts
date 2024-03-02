@@ -1,4 +1,4 @@
-import fs from "fs";
+import * as fs from "fs";
 import { random, intToString, shuffle } from "../utils";
 
 type PropertyType = keyof any;
@@ -34,7 +34,7 @@ function measurePerformanceAndMemory({
 }
 
 function saveInfo(saveInfo: string) {
-  const filePath = "./src/MapVsObject/result4.txt";
+  const filePath = "보물창고/MapVsObject/result4.txt";
   try {
     if (fs.existsSync(filePath)) {
       fs.appendFileSync(filePath, saveInfo, "utf-8");
@@ -56,7 +56,7 @@ function createProperties(프로퍼티_수: number) {
       keys.add(intToString(randomKey));
     }
   }
-  return [...keys] as PropertyType[];
+  return Array.from(keys) as PropertyType[];
 }
 
 const testFunctionObj = {
@@ -129,7 +129,7 @@ function runTest(parameters: ParameterType) {
   const 백만 = 1_000_000;
   const 천만 = 10_000_000;
   let properties = createProperties(백만);
-  for (let 프로퍼티_수 = 십만; 프로퍼티_수 <= 천만; 프로퍼티_수 += 십만) {
+  for (let 프로퍼티_수 = 7600000; 프로퍼티_수 <= 천만; 프로퍼티_수 += 십만) {
     if (프로퍼티_수 % 백만 === 0) {
       properties = properties.concat(createProperties(백만));
     }
@@ -152,9 +152,9 @@ function runTest(parameters: ParameterType) {
           properties,
         });
         const [mapResult, objResult] = testResult;
-        saveInfo(
-          `Map,${프로퍼티_수},${업데이트_또는_삭제_확률},${프로퍼티_접근_확률},${mapResult.usedTime},${mapResult.usedMemory}\nObject,${프로퍼티_수},${업데이트_또는_삭제_확률},${프로퍼티_접근_확률},${objResult.usedTime},${objResult.usedMemory}\n`
-        );
+        // saveInfo(
+        //   `Map,${프로퍼티_수},${업데이트_또는_삭제_확률},${프로퍼티_접근_확률},${mapResult.usedTime},${mapResult.usedMemory}\nObject,${프로퍼티_수},${업데이트_또는_삭제_확률},${프로퍼티_접근_확률},${objResult.usedTime},${objResult.usedMemory}\n`
+        // );
       }
     }
   }
