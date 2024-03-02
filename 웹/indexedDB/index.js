@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const store = localforage.createInstance({
     name: "myIndexedDB",
   });
-  console.log(store);
+
   const addBtn = document.querySelector(".add");
   const showBtn = document.querySelector(".show");
   const showAllBtn = document.querySelector(".show_all");

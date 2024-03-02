@@ -10,9 +10,14 @@
     "noFallthroughCasesInSwitch": true,
     "module": "ES2022",
     "outDir": "dist",
-    "rootDir": "./보물창고",
+    "rootDir": ".",
     "moduleResolution": "node"
   },
-  "include": ["보물창고/**/*.ts"],
+  "include": [
+    "자바스크립트/**/*.ts",
+    "웹/**/*.ts",
+    "웹/indexedDB/indexedDB.js",
+    "웹/indexedDB/index.js"
+  ],
   "exclude": ["node_modules"]
 }
