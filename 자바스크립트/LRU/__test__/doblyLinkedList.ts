@@ -1,5 +1,11 @@
+type Key = keyof any;
+
 class Node {
-  constructor(key, value) {
+  key: Key;
+  value: unknown;
+  prev: Node | null;
+  next: Node | null;
+  constructor(key: Key, value: unknown) {
     this.key = key;
     this.value = value;
     this.prev = null;
@@ -8,13 +14,16 @@ class Node {
 }
 
 class DoublyLinkedList {
+  head: Node | null;
+  tail: Node | null;
+  size: number;
   constructor() {
     this.head = null;
     this.tail = null;
     this.size = 0;
   }
 
-  insertHead(node) {
+  insertHead(node: Node) {
     if (this.head === null) {
       this.head = node;
       this.tail = node;
@@ -26,12 +35,12 @@ class DoublyLinkedList {
     this.size++;
   }
 
-  swapToHead(node) {
+  swapToHead(node: Node) {
     this.remove(node);
     this.insertHead(node);
   }
 
-  remove(node) {
+  remove(node: Node) {
     const { prev, next } = node;
     if (prev === null && next === null) {
       // 노드가 하나일 때
@@ -58,6 +67,11 @@ class DoublyLinkedList {
     }
 
     this.size--;
+  }
+
+  removeLastNode() {
+    const node = this.tail;
+    if (node !== null) this.remove(node);
   }
 
   toString() {
