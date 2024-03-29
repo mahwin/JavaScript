@@ -71,10 +71,4 @@ class DoublyLinkedList {
   }
 }
 
-const linkedList = new DoublyLinkedList();
-linkedList.insertHead(new Node(1, 1));
-linkedList.insertHead(new Node(2, 2));
-linkedList.insertHead(new Node(3, 3));
-console.log(linkedList.toString());
-
 export { Node, DoublyLinkedList };
