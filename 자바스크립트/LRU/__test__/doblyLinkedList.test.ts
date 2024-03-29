@@ -1,4 +1,4 @@
-import { DoublyLinkedList, Node } from "./doblyLinkedList";
+import { DoublyLinkedList, Node } from "../doblyLinkedList";
 
 describe("linkedList의 insertHead를 통해 노드를 추가할 수 있다.", () => {
   test("값을 넣을 때 마다 head에 들어가는 지 확인", () => {
@@ -43,6 +43,14 @@ describe("linkedList의 removeLastNode를 통해 tail 노드를 삭제할 수 �
     linkedList.removeLastNode();
     expect(linkedList.size).toBe(1);
     expect(linkedList.toString()).toBe([3].join("->"));
+
+    linkedList.removeLastNode();
+    linkedList.removeLastNode();
+
+    expect(linkedList.toString()).toBe("");
+    expect(linkedList.size).toBe(0);
+    expect(linkedList.head).toBeNull();
+    expect(linkedList.tail).toBeNull();
   });
 });
 

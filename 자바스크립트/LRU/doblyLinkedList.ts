@@ -66,12 +66,16 @@ class DoublyLinkedList {
       next.prev = prev;
     }
 
+    node.next = null;
+    node.prev = null;
+
     this.size--;
   }
 
   removeLastNode() {
     const node = this.tail;
-    if (node !== null) this.remove(node);
+    if (node === null) return;
+    this.remove(node);
   }
 
   toString() {
