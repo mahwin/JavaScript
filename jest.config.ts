@@ -6,7 +6,7 @@ const config: Config = {
   coverageDirectory: "coverage",
   moduleFileExtensions: ["js", "ts"],
   coverageProvider: "v8",
-  testMatch: ["<rootDir>/보물창고/minify/__test__/*.test.(js|jsx|ts|tsx)"],
+  testMatch: ["<rootDir>/자바스크립트/LRU/__test__/**.test.(js|jsx|ts|tsx)"],
 };
 
 export default config;

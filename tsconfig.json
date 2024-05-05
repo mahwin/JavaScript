@@ -13,11 +13,6 @@
     "rootDir": ".",
     "moduleResolution": "node"
   },
-  "include": [
-    "자바스크립트/**/*.ts",
-    "웹/**/*.ts",
-    "웹/indexedDB/indexedDB.js",
-    "웹/indexedDB/index.js"
-  ],
+  "include": ["자바스크립트/**/*.ts"],
   "exclude": ["node_modules"]
 }
