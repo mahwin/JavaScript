@@ -1,36 +1,20 @@
-import fs from "fs";
-import { filter, pipe, take, curry, toArray } from "@fxts/core";
-import { timer } from "../utils/timer.js";
-const log = console.log;
+import { filter, pipe, take, curry, toArray, countBy } from "@fxts/core";
+import type { wordInfo } from "./type.js";
 
-type wordInfo = {
-  id: number;
-  category: string;
-  level: string;
-  word: string;
-  mean: string;
-  frequency: string;
-  createdAt: string;
-  updatedAt: string;
-};
-const absolutePath =
-  "/Users/jeong-youseock/Desktop/JavaScript/자바스크립트/자동완성기능/vocaInfo.txt";
-
-const originData = JSON.parse(
-  fs.readFileSync(absolutePath, "utf-8")
-) as Array<wordInfo>;
-
-const isSubstringInString = curry((subString: string, { word }: wordInfo) =>
-  word.includes(subString)
+const isSubstringInString = curry((subString: string, string: string) =>
+  string.startsWith(subString)
 );
 
-let sortedData: Array<wordInfo> = [];
+const print = curry((arr: Iterable) => {
+  console.log(`baseSearch : ${arr.length}개를 찾았습니다.`);
+});
 
-const sortByFrequency = (origin: Array<wordInfo>) => {
-  sortedData = origin.sort((a, b) => Number(a.frequency) - Number());
-};
-
-timer("sortByFrequency", () => sortByFrequency(originData));
-
-export const baseSearch = (subString: string) =>
-  pipe(sortedData, filter(isSubstringInString(subString)), take(10), toArray);
+export const baseSearch = curry((iter: Iterable<wordInfo>, subString: string) =>
+  pipe(
+    iter,
+    filter(({ word }) => isSubstringInString(subString, word)),
+    take(10),
+    toArray,
+    print
+  )
+);
